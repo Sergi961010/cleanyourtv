@@ -1,0 +1,63 @@
+# TCL 55V6B (G07, Google TV 11 / SDK 30, build AR07) - debloat list used on 2026-10-24
+#
+# Based on examples/tcl-g07-google-tv/debloat.txt (the list tested by upstream on this same board).
+# Two deliberate changes, so this file is the record of what this TV actually has:
+#   - com.amazon.amazonvideo.livingroom (Prime Video) REMOVED: it is in this TV's dock.
+#   - Netflix, the official YouTube app and the Chromecast receiver ADDED: the owner does not use
+#     them (SmartTube and Prime Video instead), which matches the previous session's choices.
+# TCL OTA (com.tcl.ttvs), the voice assistant and Chromecast stay off by choice.
+#
+# Apply:   tools\disable.ps1 -TvHost <tv ip> examples\tcl-55v6b\debloat.txt
+# Undo:    tools\restore.ps1 -TvHost <tv ip> examples\tcl-55v6b\debloat.txt -Stock com.google.android.apps.tv.launcherx
+# Nothing is uninstalled. The recovery record lives in %USERPROFILE%\.cleanyourtv\.
+#
+# Follows the upstream warnings: com.tcl.keyhelp, com.tcl.inputmethod.international,
+# com.tcl.initsetup, com.tcl.suspension, com.tcl.micmanager, com.tcl.tv and com.tcl.tvinput stay
+# enabled even though the previous session disabled some of them.
+
+# 1. Telemetry and analytics
+com.tcl.ttvs                               # TCL BI/analytics, also TCL's firmware updater (kept off by choice)
+com.tcl.guard                              # TGuard device-use tracking, cleaner
+com.tcl.useragreement                      # privacy-agreement proxy for ttvs business data
+com.google.android.feedback
+com.google.android.partnersetup
+com.google.android.onetimeinitializer
+
+# 2. Content and ad services
+com.tcl.waterfall.overseas                 # content "waterfall" recommendations
+com.tcl.channelplus                        # TCL Live FAST channels (a TV input)
+com.tcl.dashboard                          # TCL Home panel, promos
+com.tcl.partnercustomizer                  # TCL tweaks to Google TV home rows
+com.tcl.messagebox                         # pushed messages and promos
+com.tcl.notereminder                       # reminders fed by the message box (re-enabled at boot on AR07, also hidden in config.xml)
+com.tcl.tv.tclhome_passive                 # TCL home content, starts at boot
+com.tcl.usercenter                         # TCL account (re-enabled at boot on AR07, also hidden in config.xml)
+com.tcl.esticker                           # retail-demo sticker
+com.tcl.hotelmenu                          # hotel-mode portal
+android.autoinstalls.config.google.gtvpai  # partner app auto-installs
+
+# 3. Background services (off by choice)
+com.tcl.MultiScreenInteraction_TV          # MagiConnect
+com.tcl.miracast                           # screen mirroring (Chromecast kept)
+com.google.android.katniss                 # Google Assistant / voice search (mic button)
+com.tcl.assistant                          # TCL voice service
+com.google.android.tv.assistant            # assistant LED service
+com.tcl.t_solo                             # T-Solo Bluetooth "listen alone"
+com.tcl.android.webview                    # TCL support browser (the system WebView is Google's)
+com.google.android.syncadapters.calendar
+
+# 4. Preloaded apps (off by choice)
+com.google.android.youtube.tv              # official YouTube, SmartTube is used instead
+com.netflix.ninja                          # Netflix, not used
+com.google.android.apps.mediashell         # Chromecast receiver, not used
+com.google.android.youtube.tvmusic
+com.google.android.play.games
+com.google.android.videos                  # Google TV / Play Movies storefront
+com.tcl.ui_mediaCenter                     # USB media player
+com.tcl.gallery
+com.iqiyi.i18n.tv                          # partner auto-install
+
+# 5. Launcher handover (setupwraith's RecoveryActivity claims HOME once launcherx is off; the install
+#    script disables launcherx itself). Ambient mode replaced by the launcher's Clock screensaver.
+com.google.android.tungsten.setupwraith
+com.google.android.apps.tv.dreamx          # ambient-mode screensaver
