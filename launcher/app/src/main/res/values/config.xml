@@ -146,8 +146,9 @@
          evdev MSC_SCAN there, which is not always the scanCode the framework reports, so a number that takes
          nothing is no proof the press never arrived. Leave empty to omit. -->
     <integer-array name="settings_key_scancodes">
-        <!-- Gear button: KEY_EPG on this Bluetooth remote, EV_KEY code 0xc005b (786523 decimal). -->
-        <item>786523</item>
+        <!-- Empty on this unit: 0xc005b in `getevent -lt` is an MSC_SCAN, not the scanCode the framework reports,
+             so listing it here matched nothing. The gear press arrives as keycode 4077, see settings_key_keycodes
+             below. -->
     </integer-array>
     <!-- The same by Android keycode, for buttons whose scancode is shared. TCL Google TV remotes send their
          Settings button as keycode 83 (KEYCODE_NOTIFICATION, which the stock Google TV home turned into its quick
@@ -157,6 +158,9 @@
          a temporary `Log.d` in the helper's `onKeyEvent`: `getKeyCode()`, `getScanCode()`, `getDeviceId()`, read
          after a HOME_KEY_SERVICE=1 rebuild. Leave empty to omit. -->
     <integer-array name="settings_key_keycodes">
+        <!-- Gear/Settings on this unit's Bluetooth remote: the firmware reports it as keycode 4077 (scanCode 233,
+             KEY_FORWARDMAIL), the same code another G07 unit with a Bluetooth remote reports (PR #420). -->
+        <item>4077</item>
     </integer-array>
     <!-- What those Settings buttons open: false, the TV's Settings; true, a small glass panel at the top right
          with TV settings, Display, Network, Apps (re-enable an app) and Launcher settings, over whatever is on screen.
@@ -167,7 +171,7 @@
          off the enabled list. true: Home puts the helpers that were running back when it starts; one turned off in
          Settings stays off. Needs WRITE_SECURE_SETTINGS, which build-and-install grants with RESTORE_KEY_SERVICES=1
          (-RestoreKeyServices on Windows). Can also be set with "restore_key_services": true in a theme's config.json. -->
-    <bool name="restore_key_services">false</bool>
+    <bool name="restore_key_services">true</bool>
 
     <!-- More remote buttons that open the input switcher, by Android keycode (INPUT_KEY_SERVICE=1
          build-and-install.sh; KEYCODE_TV always does). For buttons only a disabled app answered: the Xiaomi
@@ -201,10 +205,10 @@
          still opens on a tap; "hold:scan:490:..." works for scancodes. A key with only a hold entry does nothing
          on a tap. A listed app that is not installed leaves the button doing nothing. Leave empty to omit. -->
     <string-array name="app_keys" translatable="false">
-        <!-- YouTube button (KEY_DISPLAY_OFF, 0xc0057 / 786519) -> SmartTube -->
-        <item>scan:786519:org.smarttube.stable</item>
-        <!-- Netflix button (KEY_VIDEO_PREV, 0xc0051 / 786513) -> Disney+ -->
-        <item>scan:786513:com.disney.disneyplus</item>
+        <!-- App buttons on the Bluetooth remote: the firmware's own vendor keycodes for them, the press the stock
+             Google TV launcher (launcherx) answered before it was disabled. -->
+        <item>KEYCODE_TCL_YOUTUBE:org.smarttube.stable</item>
+        <item>KEYCODE_TCL_NETFLIX:com.github.damontecres.wholphin</item>
     </string-array>
 
     <!-- Package of the stock launcher, for TVs whose firmware turns it back on after it was disabled. XGIMI's
